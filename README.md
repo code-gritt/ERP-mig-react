@@ -80,11 +80,9 @@ Feel free to fork this repo and submit pull requests. Contributions are welcome!
 
 ### 👥 Contributors
 
-Thanks to all the contributors who have helped improve this project! 
-
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/sumitnce1"><img src="https://avatars.githubusercontent.com/u/40803138" width="100px;" alt="Sumit"/><br /><sub><b>Sumit</b></sub></a></td>
+    <td align="center"><a href="https://github.com/sumitnce1" ><img src="https://avatars.githubusercontent.com/u/40803138" width="100px;" alt="Sumit" /><br /><sub><b>Sumit</b></sub></a></td>
     <!-- Add more contributors here with their GitHub link and avatar -->
     <!-- Example -->
     <!-- <td align="center"><a href="https://github.com/another_contributor"><img src="https://avatars.githubusercontent.com/u/another_contributor_id" width="100px;" alt="Contributor"/><br /><sub><b>Contributor</b></sub></a></td> -->
