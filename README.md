@@ -3,23 +3,17 @@
 A modern React project setup using **React 19**, **Shadcn/ui** for flexible UI components, and **Tailwind CSS v4** for utility-first styling. Powered by **Vite** as the build tool, this template is designed to help you quickly build fast and responsive web applications.
 
 ## 🚀 Features
-- **React 19** for the latest React features and improvements
-- **Shadcn/ui** for beautiful, reusable UI components
-- **Tailwind CSS v4** for utility-first CSS, allowing for rapid UI development
-- **Vite** for a blazing-fast development environment with hot reloading
+
+-   **React 19** for the latest React features and improvements
+-   **Shadcn/ui** for beautiful, reusable UI components
+-   **Tailwind CSS v4** for utility-first CSS, allowing for rapid UI development
+-   **Vite** for a blazing-fast development environment with hot reloading
 
 ## 🛠️ Setup
 
 Follow these steps to get up and running with this template.
 
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/sumitnce1/React-Shadcn-Tailwind-CSS-V4.git
-cd React-Shadcn-Tailwind-CSS-V4
-```
-
-### 2. Install Dependencies
+### 1. Install Dependencies
 
 Install the required dependencies using `npm`:
 
@@ -27,7 +21,7 @@ Install the required dependencies using `npm`:
 npm install
 ```
 
-### 3. Run the Development Server
+### 2. Run the Development Server
 
 Start the development server using Vite:
 
@@ -41,14 +35,14 @@ This will start the project on [http://localhost:5173](http://localhost:5173) (o
 
 Here’s a quick overview of the main folders and files:
 
-- **src/**: Contains the main source code for the application
-  - **components/**: Contains UI components (e.g., buttons, modals)
-  - **App.jsx**: Main component where your app is bootstrapped
-- **public/**: Static assets like images and icons
-- **index.html**: Main HTML file for the app
-- **jsconfig.json**: Configuration file for JavaScript path aliases
-- **vite.config.js**: Vite configuration file
-- **package.json**: Contains project dependencies and scripts
+-   **src/**: Contains the main source code for the application
+    -   **components/**: Contains UI components (e.g., buttons, modals)
+    -   **App.jsx**: Main component where your app is bootstrapped
+-   **public/**: Static assets like images and icons
+-   **index.html**: Main HTML file for the app
+-   **jsconfig.json**: Configuration file for JavaScript path aliases
+-   **vite.config.js**: Vite configuration file
+-   **package.json**: Contains project dependencies and scripts
 
 ## 💅 Styling with Tailwind CSS
 
@@ -66,10 +60,10 @@ This will create a new `Button` component in the `src/components/ui` directory.
 
 ## 🔧 Configuration
 
-- **Vite Configuration**: Configured for fast development with support for React and Tailwind CSS.
-- **Path Aliases**: You can use `@/` to refer to the `src/` folder in your imports, simplifying module paths.
+-   **Vite Configuration**: Configured for fast development with support for React and Tailwind CSS.
+-   **Path Aliases**: You can use `@/` to refer to the `src/` folder in your imports, simplifying module paths.
 
 ## 🤖 Troubleshooting
 
-- If you run into issues with dependencies, try running `npm install --force` to resolve conflicts.
-- For any setup issues with Shadcn/ui components, you can always refer to the official Shadcn documentation for additional help.
+-   If you run into issues with dependencies, try running `npm install --force` to resolve conflicts.
+-   For any setup issues with Shadcn/ui components, you can always refer to the official Shadcn documentation for additional help.
