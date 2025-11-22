@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Mock users with roles & permissions
 const mockUsers = {
     'admin@erp.com': {
         id: 1,

@@ -1,15 +1,17 @@
-import "./App.css";
-import { Button } from "./components/ui/button";
+import { Provider } from 'react-redux';
+import { store } from '@/store/store';
+import { Toaster } from '@/components/ui/sonner';
+import { RouterProvider } from 'react-router-dom';
+import { router } from '@/app/routes/router';
+import '@/index.css';
 
 function App() {
-  return (
-    <>
-      <div className="@container text-4xl p-15 bg-emerald-200 text-center">
-        <h1 className="bg-amber-300 mb-5">Vite React Shadcn Tailwind css v4</h1>
-        <Button variant="default">Button</Button>
-      </div>
-    </>
-  );
+    return (
+        <Provider store={store}>
+            <RouterProvider router={router} />
+            <Toaster position="top-right" richColors />
+        </Provider>
+    );
 }
 
 export default App;
