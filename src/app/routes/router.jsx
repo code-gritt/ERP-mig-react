@@ -2,8 +2,7 @@ import { createBrowserRouter, createRoutesFromElements, Route, Navigate } from '
 import { useSelector } from 'react-redux';
 import MainLayout from '@/app/layout/main-layout.jsx';
 import AuthLayout from '@/app/layout/auth-layout.jsx';
-import Login1 from '@/app/routes/login/login-1.jsx';
-import Login2 from '@/app/routes/login/login-2.jsx';
+import Login from '@/app/routes/login/login.jsx';
 import Dashboard from '@/app/routes/dashboard/dashboard.jsx';
 
 const ProtectedRoute = ({ children }) => {
@@ -26,15 +25,7 @@ export const router = createBrowserRouter(
                     path="login"
                     element={
                         <PublicRoute>
-                            <Login1 />
-                        </PublicRoute>
-                    }
-                />
-                <Route
-                    path="login/otp"
-                    element={
-                        <PublicRoute>
-                            <Login2 />
+                            <Login />
                         </PublicRoute>
                     }
                 />
