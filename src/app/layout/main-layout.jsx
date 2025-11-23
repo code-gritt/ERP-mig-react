@@ -15,13 +15,29 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
+import { Sidebar, SidebarBody, SidebarLink } from '@/components/ui/sidebar';
 import { LogOut, Menu, Building2, Moon, Sun } from 'lucide-react';
+import {
+    IconHome,
+    IconChartBar,
+    IconPackage,
+    IconCurrencyDollar,
+    IconUsers,
+    IconShoppingCart,
+    IconHeartbeat,
+    IconBriefcase,
+    IconHeadphones,
+    IconBuildingFactory,
+    IconUser,
+    IconSettings,
+} from '@tabler/icons-react';
 
 export default function MainLayout() {
     const { user, company, department } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const [isDark, setIsDark] = useState(() => {
         if (typeof window !== 'undefined') {
@@ -65,150 +81,272 @@ export default function MainLayout() {
             .slice(0, 2);
     };
 
+    const sidebarLinks = [
+        {
+            label: 'Dashboard',
+            href: '/dashboard',
+            icon: <IconHome className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+        },
+        {
+            label: 'Analytics',
+            href: '/modules/analytics',
+            icon: (
+                <IconChartBar className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+            ),
+        },
+        {
+            label: 'Inventory',
+            href: '/modules/inventory',
+            icon: (
+                <IconPackage className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+            ),
+        },
+        {
+            label: 'Finance',
+            href: '/modules/finance',
+            icon: (
+                <IconCurrencyDollar className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+            ),
+        },
+        {
+            label: 'HR',
+            href: '/modules/hr',
+            icon: <IconUsers className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+        },
+        {
+            label: 'Procurement',
+            href: '/modules/procurement',
+            icon: (
+                <IconShoppingCart className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+            ),
+        },
+        {
+            label: 'CRM',
+            href: '/modules/crm',
+            icon: (
+                <IconHeartbeat className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+            ),
+        },
+        {
+            label: 'Projects',
+            href: '/modules/projects',
+            icon: (
+                <IconBriefcase className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+            ),
+        },
+        {
+            label: 'Support',
+            href: '/modules/support',
+            icon: (
+                <IconHeadphones className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+            ),
+        },
+        {
+            label: 'Manufacturing',
+            href: '/modules/manufacturing',
+            icon: (
+                <IconBuildingFactory className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+            ),
+        },
+        {
+            label: 'Profile',
+            href: '/profile',
+            icon: <IconUser className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />,
+        },
+        {
+            label: 'Settings',
+            href: '/settings',
+            icon: (
+                <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+            ),
+        },
+    ];
+
+    const filteredLinks = (() => {
+        const role = user?.role || '';
+        if (role === 'admin') return sidebarLinks;
+        if (role === 'sales_manager')
+            return sidebarLinks.filter((l) =>
+                ['Dashboard', 'Analytics', 'CRM', 'Profile', 'Settings'].includes(l.label)
+            );
+        if (role === 'hr_manager')
+            return sidebarLinks.filter((l) =>
+                ['Dashboard', 'HR', 'Profile', 'Settings'].includes(l.label)
+            );
+        return sidebarLinks.filter((l) => ['Dashboard', 'Profile'].includes(l.label));
+    })();
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-black dark:via-gray-950 dark:to-black">
-            <header className="sticky top-5 z-50 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl mx-auto">
-                <div className="flex items-center justify-between p-3 bg-white/30 dark:bg-black/30 backdrop-blur-xl border border-white/20 dark:border-gray-700 rounded-2xl shadow-xl">
-                    <Link to="/dashboard" className="flex items-center gap-3 font-bold text-2xl">
-                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-xl border border-orange-400/20">
-                            <span className="text-white font-black text-xl">E</span>
+        <div className="flex min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-black dark:via-gray-950 dark:to-black">
+            {/* Animated Sidebar */}
+            <div className="fixed top-0 left-0 h-screen z-40">
+                <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}>
+                    <SidebarBody className="bg-neutral-100 dark:bg-neutral-900 border-r border-neutral-300 dark:border-neutral-700">
+                        <div className="mt-8 flex flex-col gap-2 px-2">
+                            {filteredLinks.map((link, idx) => (
+                                <SidebarLink key={idx} link={link} />
+                            ))}
                         </div>
-                        <span className="bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
-                            Enterprise Portal
-                        </span>
-                    </Link>
-
-                    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-                        <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon" className="lg:hidden">
-                                <Menu className="h-6 w-6" />
-                            </Button>
-                        </SheetTrigger>
-                        <SheetContent
-                            side="right"
-                            className="w-80 bg-white/40 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-gray-700 rounded-2xl"
-                        >
-                            <SheetHeader>
-                                <SheetTitle className="flex items-center gap-3 text-2xl">
-                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
-                                        <span className="text-white font-black">E</span>
-                                    </div>
-                                    Portal
-                                </SheetTitle>
-                            </SheetHeader>
-                            <div className="mt-8 space-y-4">
-                                <div className="flex items-center justify-between p-4 rounded-xl bg-white/20 dark:bg-black/20 backdrop-blur-md">
-                                    <span className="text-sm font-medium">Dark Mode</span>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={toggleTheme}
-                                        className="h-9 w-9"
-                                    >
-                                        {isDark ? (
-                                            <Sun className="h-5 w-5" />
-                                        ) : (
-                                            <Moon className="h-5 w-5" />
-                                        )}
-                                    </Button>
-                                </div>
-                                <div className="flex items-center gap-4 p-4 rounded-xl bg-white/20 dark:bg-black/20 backdrop-blur-md">
-                                    <Avatar className="h-14 w-14">
-                                        <AvatarImage src={user?.avatar} />
-                                        <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-600 text-white font-bold text-xl">
-                                            {getInitials(user?.name)}
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <div>
-                                        <p className="font-semibold">{user?.name}</p>
-                                        <p className="text-sm text-muted-foreground">
-                                            {user?.email}
-                                        </p>
-                                    </div>
-                                </div>
-                                <Separator />
-                                <Button
-                                    onClick={handleLogout}
-                                    variant="destructive"
-                                    className="w-full justify-start gap-3"
-                                >
-                                    <LogOut className="h-4 w-4" />
-                                    Log out
-                                </Button>
+                        <div className="p-4 border-t border-neutral-300 dark:border-neutral-700 mt-auto">
+                            <div className="flex items-center gap-3">
+                                <Avatar className="h-10 w-10">
+                                    <AvatarImage src={user?.avatar} />
+                                    <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
+                                </Avatar>
                             </div>
-                        </SheetContent>
-                    </Sheet>
+                        </div>
+                    </SidebarBody>
+                </Sidebar>
+            </div>
 
-                    <div className="hidden lg:flex items-center gap-3">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            onClick={toggleTheme}
-                            className="h-11 w-11 rounded-full hover:bg-accent/80 transition-all duration-300 hover:scale-110"
-                            aria-label="Toggle dark mode"
+            {/* Your original navbar + content */}
+            <div className="flex-1 flex flex-col">
+                <header className="sticky top-5 z-50 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl mx-auto">
+                    <div className="flex items-center justify-between p-3 bg-white/30 dark:bg-black/30 backdrop-blur-xl border border-white/20 dark:border-gray-700 rounded-2xl shadow-xl">
+                        <Link
+                            to="/dashboard"
+                            className="flex items-center gap-3 font-bold text-2xl"
                         >
-                            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                            <span className="sr-only">Toggle theme</span>
-                        </Button>
+                            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-xl border border-orange-400/20">
+                                <span className="text-white font-black text-xl">E</span>
+                            </div>
+                            <span className="bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
+                                Enterprise Portal
+                            </span>
+                        </Link>
 
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    className="relative h-12 w-12 rounded-full ring-2 ring-transparent hover:ring-orange-500/30 transition-all group"
-                                >
-                                    <Avatar className="h-12 w-12">
-                                        <AvatarImage src={user?.avatar} />
-                                        <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-600 text-white font-bold text-lg shadow-inner">
-                                            {getInitials(user?.name)}
-                                        </AvatarFallback>
-                                    </Avatar>
+                        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                            <SheetTrigger asChild>
+                                <Button variant="ghost" size="icon" className="lg:hidden">
+                                    <Menu className="h-6 w-6" />
                                 </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                                className="w-80 p-5 border border-white/20 shadow-2xl bg-white/30 dark:bg-black/30 backdrop-blur-xl rounded-2xl"
-                                align="end"
+                            </SheetTrigger>
+                            <SheetContent
+                                side="right"
+                                className="w-80 bg-white/40 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-gray-700 rounded-2xl"
                             >
-                                <DropdownMenuLabel className="p-0">
-                                    <div className="flex items-start gap-4">
-                                        <Avatar className="h-16 w-16 ring-4 ring-orange-500/10">
+                                <SheetHeader>
+                                    <SheetTitle className="flex items-center gap-3 text-2xl">
+                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                                            <span className="text-white font-black">E</span>
+                                        </div>
+                                        Portal
+                                    </SheetTitle>
+                                </SheetHeader>
+                                <div className="mt-8 space-y-4">
+                                    <div className="flex items-center justify-between p-4 rounded-xl bg-white/20 dark:bg-black/20 backdrop-blur-md">
+                                        <span className="text-sm font-medium">Dark Mode</span>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={toggleTheme}
+                                            className="h-9 w-9"
+                                        >
+                                            {isDark ? (
+                                                <Sun className="h-5 w-5" />
+                                            ) : (
+                                                <Moon className="h-5 w-5" />
+                                            )}
+                                        </Button>
+                                    </div>
+                                    <div className="flex items-center gap-4 p-4 rounded-xl bg-white/20 dark:bg-black/20 backdrop-blur-md">
+                                        <Avatar className="h-14 w-14">
                                             <AvatarImage src={user?.avatar} />
-                                            <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-600 text-white text-2xl font-bold">
+                                            <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-600 text-white font-bold text-xl">
                                                 {getInitials(user?.name)}
                                             </AvatarFallback>
                                         </Avatar>
-                                        <div className="space-y-1">
-                                            <p className="text-lg font-bold">{user?.name}</p>
+                                        <div>
+                                            <p className="font-semibold">{user?.name}</p>
                                             <p className="text-sm text-muted-foreground">
                                                 {user?.email}
                                             </p>
-                                            <div className="flex items-center gap-2 text-xs font-medium text-orange-600 dark:text-orange-400">
-                                                <Building2 className="w-4 h-4" />
-                                                <span>
-                                                    {company} • {department}
-                                                </span>
-                                            </div>
                                         </div>
                                     </div>
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator className="my-4" />
-                                <DropdownMenuItem
-                                    onClick={handleLogout}
-                                    className="cursor-pointer text-red-600 dark:text-red-400 font-medium hover:bg-red-50 dark:hover:bg-red-950/50"
-                                >
-                                    <LogOut className="mr-3 h-5 w-5" />
-                                    <span>Log out</span>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
-                </div>
-            </header>
+                                    <Separator />
+                                    <Button
+                                        onClick={handleLogout}
+                                        variant="destructive"
+                                        className="w-full justify-start gap-3"
+                                    >
+                                        <LogOut className="h-4 w-4" />
+                                        Log out
+                                    </Button>
+                                </div>
+                            </SheetContent>
+                        </Sheet>
 
-            <main className="container max-w-7xl mx-auto p-6 md:p-10 pt-24">
-                <Outlet />
-            </main>
+                        <div className="hidden lg:flex items-center gap-3">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={toggleTheme}
+                                className="h-11 w-11 rounded-full hover:bg-accent/80 transition-all duration-300 hover:scale-110"
+                                aria-label="Toggle dark mode"
+                            >
+                                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                                <span className="sr-only">Toggle theme</span>
+                            </Button>
+
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        className="relative h-12 w-12 rounded-full ring-2 ring-transparent hover:ring-orange-500/30 transition-all group"
+                                    >
+                                        <Avatar className="h-12 w-12">
+                                            <AvatarImage src={user?.avatar} />
+                                            <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-600 text-white font-bold text-lg shadow-inner">
+                                                {getInitials(user?.name)}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent
+                                    className="w-80 p-5 border border-white/20 shadow-2xl bg-white/30 dark:bg-black/30 backdrop-blur-xl rounded-2xl"
+                                    align="end"
+                                >
+                                    <DropdownMenuLabel className="p-0">
+                                        <div className="flex items-start gap-4">
+                                            <Avatar className="h-16 w-16 ring-4 ring-orange-500/10">
+                                                <AvatarImage src={user?.avatar} />
+                                                <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-600 text-white text-2xl font-bold">
+                                                    {getInitials(user?.name)}
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            <div className="space-y-1">
+                                                <p className="text-lg font-bold">{user?.name}</p>
+                                                <p className="text-sm text-muted-foreground">
+                                                    {user?.email}
+                                                </p>
+                                                <div className="flex items-center gap-2 text-xs font-medium text-orange-600 dark:text-orange-400">
+                                                    <Building2 className="w-4 h-4" />
+                                                    <span>
+                                                        {company} • {department}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator className="my-4" />
+                                    <DropdownMenuItem
+                                        onClick={handleLogout}
+                                        className="cursor-pointer text-red-600 dark:text-red-400 font-medium hover:bg-red-50 dark:hover:bg-red-950/50"
+                                    >
+                                        <LogOut className="mr-3 h-5 w-5" />
+                                        <span>Log out</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    </div>
+                </header>
+
+                <main className="container max-w-7xl mx-auto p-6 md:p-10 pt-24 flex-1">
+                    <Outlet />
+                </main>
+            </div>
         </div>
     );
 }
