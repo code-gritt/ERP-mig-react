@@ -1,8 +1,10 @@
-import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Outlet, useNavigate, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '@/features/auth/authSlice';
 import { toast } from 'sonner';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,14 +13,15 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, User, Building2 } from 'lucide-react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Separator } from '@/components/ui/separator';
+import { LogOut, Menu, Building2 } from 'lucide-react';
 
 export default function MainLayout() {
     const { user, company, department } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -41,79 +44,119 @@ export default function MainLayout() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-black dark:via-gray-950 dark:to-black">
-            <header className="border-b border-gray-200/60 dark:border-white/10 backdrop-blur-xl bg-white/80 dark:bg-black/80 sticky top-0 z-40">
-                <div className="flex items-center justify-between h-16 px-6">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg">
-                            <span className="text-white font-black text-lg">E</span>
+            <header className="sticky top-5 z-50 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl mx-auto">
+                <div className="flex items-center justify-between p-3 bg-card/90 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl">
+                    <Link to="/dashboard" className="flex items-center gap-3 font-bold text-2xl">
+                        <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-xl border border-orange-400/20">
+                            <span className="text-white font-black text-xl">E</span>
                         </div>
-                        <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
+                        <span className="bg-gradient-to-r from-orange-600 to-orange-500 bg-clip-text text-transparent">
                             Enterprise Portal
-                        </h1>
-                    </div>
+                        </span>
+                    </Link>
 
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                className="relative h-11 w-11 rounded-full ring-2 ring-transparent hover:ring-orange-500/30 transition-all duration-300 group"
-                            >
-                                <Avatar className="h-11 w-11">
-                                    <AvatarImage src={user?.avatar} />
-                                    <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-600 text-white font-bold text-lg shadow-inner">
-                                        {getInitials(user?.name)}
-                                    </AvatarFallback>
-                                </Avatar>
+                    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+                        <SheetTrigger asChild>
+                            <Button variant="ghost" size="icon" className="lg:hidden">
+                                <Menu className="h-6 w-6" />
                             </Button>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent
-                            className="w-72 p-4 border border-gray-200/50 dark:border-white/10 shadow-2xl"
-                            align="end"
-                            sideOffset={8}
+                        </SheetTrigger>
+                        <SheetContent
+                            side="right"
+                            className="w-80 bg-card/95 backdrop-blur-xl border-border/50"
                         >
-                            {/* User Info */}
-                            <DropdownMenuLabel className="p-0">
-                                <div className="flex items-start gap-4">
+                            <SheetHeader>
+                                <SheetTitle className="flex items-center gap-3 text-2xl">
+                                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center">
+                                        <span className="text-white font-black">E</span>
+                                    </div>
+                                    Portal
+                                </SheetTitle>
+                            </SheetHeader>
+                            <div className="mt-8 space-y-4">
+                                <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/50">
                                     <Avatar className="h-14 w-14">
                                         <AvatarImage src={user?.avatar} />
-                                        <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-600 text-white text-xl font-bold">
+                                        <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-600 text-white font-bold text-xl">
                                             {getInitials(user?.name)}
                                         </AvatarFallback>
                                     </Avatar>
-                                    <div className="space-y-1">
-                                        <p className="text-base font-semibold text-foreground">
-                                            {user?.name}
-                                        </p>
+                                    <div>
+                                        <p className="font-semibold">{user?.name}</p>
                                         <p className="text-sm text-muted-foreground">
                                             {user?.email}
                                         </p>
-                                        <div className="flex items-center gap-2 text-xs text-orange-600 dark:text-orange-400 font-medium">
-                                            <Building2 className="w-3.5 h-3.5" />
-                                            <span>
-                                                {company} • {department}
-                                            </span>
-                                        </div>
                                     </div>
                                 </div>
-                            </DropdownMenuLabel>
+                                <Separator />
+                                <Button
+                                    onClick={handleLogout}
+                                    variant="destructive"
+                                    className="w-full justify-start gap-3"
+                                >
+                                    <LogOut className="h-4 w-4" />
+                                    Log out
+                                </Button>
+                            </div>
+                        </SheetContent>
+                    </Sheet>
 
-                            <DropdownMenuSeparator className="my-3" />
-
-                            <DropdownMenuItem
-                                onClick={handleLogout}
-                                className="cursor-pointer text-red-600 dark:text-red-400 font-medium hover:bg-red-50 dark:hover:bg-red-950/50 transition-colors group"
+                    <div className="hidden lg:block">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    className="relative h-12 w-12 rounded-full ring-2 ring-transparent hover:ring-orange-500/30 transition-all group"
+                                >
+                                    <Avatar className="h-12 w-12">
+                                        <AvatarImage src={user?.avatar} />
+                                        <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-600 text-white font-bold text-lg shadow-inner">
+                                            {getInitials(user?.name)}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                                className="w-80 p-5 border border-border/50 shadow-2xl"
+                                align="end"
                             >
-                                <LogOut className="mr-3 h-4 w-4" />
-                                <span>Log out</span>
-                                <kbd className="ml-auto text-xs opacity-60">Esc</kbd>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                                <DropdownMenuLabel className="p-0">
+                                    <div className="flex items-start gap-4">
+                                        <Avatar className="h-16 w-16 ring-4 ring-orange-500/10">
+                                            <AvatarImage src={user?.avatar} />
+                                            <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-600 text-white text-2xl font-bold">
+                                                {getInitials(user?.name)}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        <div className="space-y-1">
+                                            <p className="text-lg font-bold">{user?.name}</p>
+                                            <p className="text-sm text-muted-foreground">
+                                                {user?.email}
+                                            </p>
+                                            <div className="flex items-center gap-2 text-xs font-medium text-orange-600 dark:text-orange-400">
+                                                <Building2 className="w-4 h-4" />
+                                                <span>
+                                                    {company} • {department}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator className="my-4" />
+                                <DropdownMenuItem
+                                    onClick={handleLogout}
+                                    className="cursor-pointer text-red-600 dark:text-red-400 font-medium hover:bg-red-50 dark:hover:bg-red-950/50"
+                                >
+                                    <LogOut className="mr-3 h-5 w-5" />
+                                    <span>Log out</span>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
             </header>
 
-            <main className="container max-w-7xl mx-auto p-6 md:p-10">
+            <main className="container max-w-7xl mx-auto p-6 md:p-10 pt-24">
                 <Outlet />
             </main>
         </div>
