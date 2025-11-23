@@ -1,7 +1,9 @@
+// src/pages/Dashboard.jsx
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+// FocusCards — 5 columns on lg+
 export const Card = React.memo(({ card, index, hovered, setHovered }) => (
     <div
         onMouseEnter={() => setHovered(index)}
@@ -24,7 +26,6 @@ export const Card = React.memo(({ card, index, hovered, setHovered }) => (
                 {card.title}
             </div>
         </div>
-
         <Link to={card.url} className="absolute inset-0 z-10" aria-label={`Open ${card.title}`} />
     </div>
 ));
@@ -35,7 +36,7 @@ export function FocusCards({ cards }) {
     const [hovered, setHovered] = React.useState(null);
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto w-full px-4 md:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 max-w-7xl mx-auto w-full px-4">
             {cards.map((card, index) => (
                 <Card
                     key={card.title}
@@ -49,6 +50,7 @@ export function FocusCards({ cards }) {
     );
 }
 
+// All ERP Modules
 const erpModuleCards = [
     {
         title: 'Sales',
@@ -80,12 +82,32 @@ const erpModuleCards = [
         src: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2940&auto=format',
         url: '/modules/crm',
     },
+    {
+        title: 'Analytics',
+        src: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2940&auto=format',
+        url: '/modules/analytics',
+    },
+    {
+        title: 'Projects',
+        src: 'https://images.unsplash.com/photo-1519389951296-5a9e63c8e4f7?q=80&w=2940&auto=format',
+        url: '/modules/projects',
+    },
+    {
+        title: 'Support',
+        src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=2940&auto=format',
+        url: '/modules/support',
+    },
+    {
+        title: 'Manufacturing',
+        src: 'https://images.unsplash.com/photo-1581092580497-e0d23cbdf9dc?q=80&w=2940&auto=format',
+        url: '/modules/manufacturing',
+    },
 ];
 
 export default function Dashboard() {
     const { user, company, department } = useSelector((state) => state.auth);
-
     const userRole = user?.role || '';
+
     const allowedModules = erpModuleCards.filter((card) => {
         if (userRole === 'admin') return true;
         if (userRole === 'sales_manager') return ['Sales', 'CRM'].includes(card.title);
@@ -94,81 +116,78 @@ export default function Dashboard() {
     });
 
     return (
-        <div className="max-w-5xl mx-auto">
-            <div className="mb-10">
-                <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">
+        <div className="max-w-7xl mx-auto px-4 py-8 space-y-12">
+            {/* Greeting */}
+            <div className="text-center">
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 to-amber-500 bg-clip-text text-transparent">
                     Welcome back, {user?.name.split(' ')[0]}!
                 </h1>
-                <p className="text-lg text-gray-600 dark:text-gray-400">
-                    You are logged in as{' '}
-                    <strong className="capitalize">{user?.role.replace('_', ' ')}</strong>
+                <p className="mt-3 text-xl text-gray-600 dark:text-gray-300">
+                    Managing{' '}
+                    <strong className="text-orange-600 dark:text-orange-400">{company}</strong> •{' '}
+                    {department}
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                <div className="p-6 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/20 rounded-2xl border border-orange-200 dark:border-orange-800">
+            {/* Single Row: Stats + Session Details */}
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                {/* Company */}
+                <div className="p-5 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/20 rounded-2xl border border-orange-200 dark:border-orange-800">
                     <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
                         Company
                     </p>
-                    <p className="text-2xl font-bold mt-2">{company || '—'}</p>
+                    <p className="text-xl font-bold mt-1">{company || '—'}</p>
                 </div>
 
-                <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 rounded-2xl border border-blue-200 dark:border-blue-800">
+                {/* Department */}
+                <div className="p-5 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 rounded-2xl border border-blue-200 dark:border-blue-800">
                     <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
                         Department
                     </p>
-                    <p className="text-2xl font-bold mt-2">{department || '—'}</p>
+                    <p className="text-xl font-bold mt-1">{department || '—'}</p>
                 </div>
 
-                <div className="p-6 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/20 rounded-2xl border border-purple-200 dark:border-purple-800">
+                {/* Role */}
+                <div className="p-5 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/20 rounded-2xl border border-purple-200 dark:border-purple-800">
                     <p className="text-sm font-medium text-purple-600 dark:text-purple-400">Role</p>
-                    <p className="text-2xl font-bold mt-2 capitalize">
+                    <p className="text-xl font-bold mt-1 capitalize">
                         {user?.role.replace('_manager', '').replace('_', ' ')}
                     </p>
                 </div>
 
-                <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/20 rounded-2xl border border-green-200 dark:border-green-800">
+                {/* Status */}
+                <div className="p-5 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/20 rounded-2xl border border-green-200 dark:border-green-800">
                     <p className="text-sm font-medium text-green-600 dark:text-green-400">Status</p>
-                    <p className="text-2xl font-bold mt-2">Active Session</p>
+                    <p className="text-xl font-bold mt-1">Active Session</p>
                 </div>
-            </div>
 
-            <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg border p-8">
-                <h2 className="text-2xl font-semibold mb-6">Session Details</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                    <div>
-                        <span className="text-gray-500 dark:text-gray-400">Full Name</span>
-                        <p className="font-medium mt-1">{user?.name}</p>
-                    </div>
-                    <div>
-                        <span className="text-gray-500 dark:text-gray-400">Email</span>
-                        <p className="font-medium mt-1">{user?.email}</p>
-                    </div>
-                    <div>
-                        <span className="text-gray-500 dark:text-gray-400">Company</span>
-                        <p className="font-medium mt-1">{company}</p>
-                    </div>
-                    <div>
-                        <span className="text-gray-500 dark:text-gray-400">Department</span>
-                        <p className="font-medium mt-1">{department}</p>
+                {/* Session Details — merged into the row */}
+                <div className="lg:col-span-2 p-5 bg-white dark:bg-zinc-900 rounded-2xl border shadow-sm">
+                    <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                        Session Details
+                    </p>
+                    <div className="mt-2 space-y-1 text-sm">
+                        <p className="font-medium">{user?.name}</p>
+                        <p className="text-gray-500 dark:text-gray-400">{user?.email}</p>
                     </div>
                 </div>
             </div>
 
-            <div className="mt-20">
-                <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-                    Your Modules
-                </h2>
-                {allowedModules.length > 0 ? (
-                    <FocusCards cards={allowedModules} />
-                ) : (
-                    <div className="text-center py-20">
-                        <p className="text-xl text-gray-500 dark:text-gray-400">
-                            No modules assigned to your role.
-                        </p>
-                    </div>
-                )}
-            </div>
+            {/* Your Modules Title */}
+            <h2 className="text-4xl font-bold text-center text-gray-900 dark:text-white">
+                Your Modules
+            </h2>
+
+            {/* FocusCards — 5 per row, fits perfectly */}
+            {allowedModules.length > 0 ? (
+                <FocusCards cards={allowedModules} />
+            ) : (
+                <div className="text-center py-16">
+                    <p className="text-xl text-gray-500 dark:text-gray-400">
+                        No modules assigned to your role.
+                    </p>
+                </div>
+            )}
         </div>
     );
 }
