@@ -6,6 +6,7 @@ import { loginSuccess } from '@/features/auth/authSlice';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { toast } from 'sonner';
 import {
     Select,
     SelectContent,
@@ -35,7 +36,7 @@ export default function LoginStepper() {
     const [company, setCompany] = useState('');
     const [department, setDepartment] = useState('');
     const [usernameInput, setUsernameInput] = useState('');
-    const [isLoading, setIsLoading] = useState(false); // ← NEW
+    const [isLoading, setIsLoading] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -85,11 +86,16 @@ export default function LoginStepper() {
                     department,
                 })
             );
+
+            toast.success(`Welcome back, ${foundUser.name.split(' ')[0]}!`, {
+                description: `Signed in to ${company} • ${department}`,
+            });
+
             navigate('/dashboard');
         } else {
-            alert(
-                'User not found. Try:\n• admin@erp.com\n• Admin User\n• sales@erp.com\n• hr@erp.com'
-            );
+            toast.error('User not found', {
+                description: 'Try: admin@erp.com, sales@erp.com, or hr@erp.com',
+            });
         }
 
         setIsLoading(false);
