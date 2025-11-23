@@ -1,4 +1,4 @@
-import LoginStepper from '@/components/signup-form-demo';
+import LoginStepper from '@/components/LoginStepper';
 import React from 'react';
 
 export default function Login() {

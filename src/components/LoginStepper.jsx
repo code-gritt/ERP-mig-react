@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/select';
 import { SignupLabel } from './ui/signup_label';
 import { SignupInput } from './ui/signup_input';
+import { mockUsers } from '@/features/auth/authSlice';
 
 const step1Schema = z.object({
     username: z.string().min(3, 'Username too short'),
@@ -30,15 +31,11 @@ const COMPANIES = {
     Oscorp: ['Bio', 'Chemicals', 'Genetics'],
 };
 
-// Import mockUsers directly from slice
-import { mockUsers } from '@/features/auth/authSlice';
-
 export default function LoginStepper() {
     const [step, setStep] = useState(1);
     const [company, setCompany] = useState('');
     const [department, setDepartment] = useState('');
-    const [usernameInput, setUsernameInput] = useState(''); // Track input value
-
+    const [usernameInput, setUsernameInput] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -77,7 +74,13 @@ export default function LoginStepper() {
         }
 
         if (foundUser) {
-            dispatch(loginSuccess(foundUser.email));
+            dispatch(
+                loginSuccess({
+                    email: foundUser.email,
+                    company,
+                    department,
+                })
+            );
             navigate('/dashboard');
         } else {
             alert(

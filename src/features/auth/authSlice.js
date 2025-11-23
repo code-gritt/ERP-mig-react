@@ -63,16 +63,16 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         loginSuccess(state, action) {
-            const email = action.payload;
+            const { email, company, department } = action.payload;
             const user = mockUsers[email];
 
-            if (!user) {
-                return state;
-            }
+            if (!user) return;
 
             state.user = user;
             state.isAuthenticated = true;
             state.token = 'mock-jwt-' + Date.now();
+            state.company = company;
+            state.department = department;
 
             saveState(state);
             logLogin(user);
@@ -81,6 +81,8 @@ const authSlice = createSlice({
             state.user = null;
             state.isAuthenticated = false;
             state.token = null;
+            state.company = null;
+            state.department = null;
             saveState(state);
         },
         restoreSession(state) {
@@ -88,6 +90,5 @@ const authSlice = createSlice({
         },
     },
 });
-
 export const { loginSuccess, logout, restoreSession } = authSlice.actions;
 export default authSlice.reducer;
