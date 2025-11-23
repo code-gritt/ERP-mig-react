@@ -68,7 +68,7 @@ export default function MainLayout() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-black dark:via-gray-950 dark:to-black">
             <header className="sticky top-5 z-50 w-[90%] md:w-[70%] lg:w-[75%] lg:max-w-screen-xl mx-auto">
-                <div className="flex items-center justify-between p-3 bg-card/90 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl">
+                <div className="flex items-center justify-between p-3 bg-white/30 dark:bg-black/30 backdrop-blur-xl border border-white/20 dark:border-gray-700 rounded-2xl shadow-xl">
                     <Link to="/dashboard" className="flex items-center gap-3 font-bold text-2xl">
                         <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-xl border border-orange-400/20">
                             <span className="text-white font-black text-xl">E</span>
@@ -86,7 +86,7 @@ export default function MainLayout() {
                         </SheetTrigger>
                         <SheetContent
                             side="right"
-                            className="w-80 bg-card/95 backdrop-blur-xl border-border/50"
+                            className="w-80 bg-white/40 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-gray-700 rounded-2xl"
                         >
                             <SheetHeader>
                                 <SheetTitle className="flex items-center gap-3 text-2xl">
@@ -97,7 +97,7 @@ export default function MainLayout() {
                                 </SheetTitle>
                             </SheetHeader>
                             <div className="mt-8 space-y-4">
-                                <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50">
+                                <div className="flex items-center justify-between p-4 rounded-xl bg-white/20 dark:bg-black/20 backdrop-blur-md">
                                     <span className="text-sm font-medium">Dark Mode</span>
                                     <Button
                                         variant="ghost"
@@ -112,7 +112,7 @@ export default function MainLayout() {
                                         )}
                                     </Button>
                                 </div>
-                                <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/50">
+                                <div className="flex items-center gap-4 p-4 rounded-xl bg-white/20 dark:bg-black/20 backdrop-blur-md">
                                     <Avatar className="h-14 w-14">
                                         <AvatarImage src={user?.avatar} />
                                         <AvatarFallback className="bg-gradient-to-br from-orange-500 to-orange-600 text-white font-bold text-xl">
@@ -167,7 +167,7 @@ export default function MainLayout() {
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent
-                                className="w-80 p-5 border border-border/50 shadow-2xl"
+                                className="w-80 p-5 border border-white/20 shadow-2xl bg-white/30 dark:bg-black/30 backdrop-blur-xl rounded-2xl"
                                 align="end"
                             >
                                 <DropdownMenuLabel className="p-0">
