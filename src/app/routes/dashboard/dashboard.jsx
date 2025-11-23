@@ -1,8 +1,97 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+export const Card = React.memo(({ card, index, hovered, setHovered }) => (
+    <div
+        onMouseEnter={() => setHovered(index)}
+        onMouseLeave={() => setHovered(null)}
+        className={`rounded-3xl relative bg-gray-100 dark:bg-neutral-900 overflow-hidden h-96 w-full transition-all duration-300 ease-out ${
+            hovered !== null && hovered !== index ? 'blur-sm scale-[0.98]' : ''
+        }`}
+    >
+        <img
+            src={card.src}
+            alt={card.title}
+            className="object-cover absolute inset-0 w-full h-full"
+        />
+        <div
+            className={`absolute inset-0 bg-black/60 flex items-end py-10 px-8 transition-opacity duration-300 ${
+                hovered === index ? 'opacity-100' : 'opacity-0'
+            }`}
+        >
+            <div className="text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-300 drop-shadow-lg">
+                {card.title}
+            </div>
+        </div>
+
+        <Link to={card.url} className="absolute inset-0 z-10" aria-label={`Open ${card.title}`} />
+    </div>
+));
+
+Card.displayName = 'Card';
+
+export function FocusCards({ cards }) {
+    const [hovered, setHovered] = React.useState(null);
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto w-full px-4 md:px-8">
+            {cards.map((card, index) => (
+                <Card
+                    key={card.title}
+                    card={card}
+                    index={index}
+                    hovered={hovered}
+                    setHovered={setHovered}
+                />
+            ))}
+        </div>
+    );
+}
+
+const erpModuleCards = [
+    {
+        title: 'Sales',
+        src: 'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?q=80&w=2940&auto=format',
+        url: '/modules/sales',
+    },
+    {
+        title: 'Inventory',
+        src: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2940&auto=format',
+        url: '/modules/inventory',
+    },
+    {
+        title: 'Finance',
+        src: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=2940&auto=format',
+        url: '/modules/finance',
+    },
+    {
+        title: 'HR',
+        src: 'https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=2940&auto=format',
+        url: '/modules/hr',
+    },
+    {
+        title: 'Procurement',
+        src: 'https://images.unsplash.com/photo-1586528116023-1a9f5e6d39c4?q=80&w=2940&auto=format',
+        url: '/modules/procurement',
+    },
+    {
+        title: 'CRM',
+        src: 'https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2940&auto=format',
+        url: '/modules/crm',
+    },
+];
 
 export default function Dashboard() {
     const { user, company, department } = useSelector((state) => state.auth);
+
+    const userRole = user?.role || '';
+    const allowedModules = erpModuleCards.filter((card) => {
+        if (userRole === 'admin') return true;
+        if (userRole === 'sales_manager') return ['Sales', 'CRM'].includes(card.title);
+        if (userRole === 'hr_manager') return card.title === 'HR';
+        return false;
+    });
 
     return (
         <div className="max-w-5xl mx-auto">
@@ -64,6 +153,21 @@ export default function Dashboard() {
                         <p className="font-medium mt-1">{department}</p>
                     </div>
                 </div>
+            </div>
+
+            <div className="mt-20">
+                <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
+                    Your Modules
+                </h2>
+                {allowedModules.length > 0 ? (
+                    <FocusCards cards={allowedModules} />
+                ) : (
+                    <div className="text-center py-20">
+                        <p className="text-xl text-gray-500 dark:text-gray-400">
+                            No modules assigned to your role.
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     );
