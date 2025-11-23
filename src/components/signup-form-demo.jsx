@@ -38,8 +38,7 @@ export default function LoginStepper() {
     };
 
     return (
-        <div className="w-full max-w-md mx-auto">
-            <div className="shadow-input mx-auto w-full rounded-2xl bg-white p-6 md:p-8 dark:bg-black border border-gray-200/40 dark:border-white/10">
+    <div className="w-full max-w-md bg-white dark:bg-black rounded-3xl p-8 shadow-2xl border border-gray-200/40 dark:border-white/10">
                 <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white">
                     Enterprise Login
                 </h2>
@@ -104,7 +103,7 @@ export default function LoginStepper() {
 
                                 <button
                                     onClick={next}
-                                    className="group relative block h-12 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] hover:scale-[1.02] transition-all"
+                                    className="group relative block h-12 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all"
                                 >
                                     Continue →
                                     <BottomGradient />
@@ -115,7 +114,7 @@ export default function LoginStepper() {
                                 <LabelInputContainer>
                                     <SignupLabel>Company</SignupLabel>
                                     <select
-                                        className="shadow-input dark:placeholder-text-neutral-600 flex h-10 w-full rounded-md border-none bg-gray-50 px-3 py-2 text-sm text-black transition duration-400 focus-visible:ring-[2px] focus-visible:ring-neutral-400 focus-visible:outline-none dark:bg-zinc-800 dark:text-white dark:shadow-[0px_0px_1px_1px_#404040] disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="shadow-input dark:placeholder-text-neutral-600 flex h-10 w-full rounded-md border-none bg-gray-50 px-3 py-2 text-sm text-black transition duration-400 focus-visible:ring-[2px] focus-visible:ring-orange-400 focus-visible:outline-none dark:bg-zinc-800 dark:text-white dark:shadow-[0px_0px_1px_1px_#404040] disabled:cursor-not-allowed disabled:opacity-50"
                                         value={data.company}
                                         onChange={(e) =>
                                             setData({
@@ -137,7 +136,7 @@ export default function LoginStepper() {
                                 <LabelInputContainer>
                                     <SignupLabel>Department</SignupLabel>
                                     <select
-                                        className="shadow-input dark:placeholder-text-neutral-600 flex h-10 w-full rounded-md border-none bg-gray-50 px-3 py-2 text-sm text-black transition duration-400 focus-visible:ring-[2px] focus-visible:ring-neutral-400 focus-visible:outline-none dark:bg-zinc-800 dark:text-white dark:shadow-[0px_0px_1px_1px_#404040] disabled:cursor-not-allowed disabled:opacity-50"
+                                        className="shadow-input dark:placeholder-text-neutral-600 flex h-10 w-full rounded-md border-none bg-gray-50 px-3 py-2 text-sm text-black transition duration-400 focus-visible:ring-[2px] focus-visible:ring-orange-400 focus-visible:outline-none dark:bg-zinc-800 dark:text-white dark:shadow-[0px_0px_1px_1px_#404040] disabled:cursor-not-allowed disabled:opacity-50"
                                         value={data.department}
                                         onChange={(e) =>
                                             setData({ ...data, department: e.target.value })
@@ -167,7 +166,7 @@ export default function LoginStepper() {
                                     <button
                                         onClick={handleLogin}
                                         disabled={!data.company || !data.department}
-                                        className="flex-1 h-12 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed relative"
+                                        className="flex-1 h-12 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50 disabled:cursor-not-allowed relative"
                                     >
                                         Sign In
                                         <BottomGradient />
@@ -178,11 +177,10 @@ export default function LoginStepper() {
                     </motion.div>
                 </AnimatePresence>
             </div>
-        </div>
+       
     );
 }
 
-// Gradient bottom animation
 const BottomGradient = () => (
     <>
         <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-orange-400 to-transparent opacity-0 transition duration-500 group-hover:opacity-100" />
@@ -190,7 +188,6 @@ const BottomGradient = () => (
     </>
 );
 
-// Container for label + input
 const LabelInputContainer = ({ children, className }) => (
     <div className={cn('flex w-full flex-col space-y-2', className)}>{children}</div>
 );
