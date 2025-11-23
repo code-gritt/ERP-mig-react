@@ -16,6 +16,7 @@ import {
 import { SignupLabel } from './ui/signup_label';
 import { SignupInput } from './ui/signup_input';
 import { mockUsers } from '@/features/auth/authSlice';
+import { Spinner } from '@/components/ui/spinner';
 
 const step1Schema = z.object({
     username: z.string().min(3, 'Username too short'),
@@ -34,6 +35,7 @@ export default function LoginStepper() {
     const [company, setCompany] = useState('');
     const [department, setDepartment] = useState('');
     const [usernameInput, setUsernameInput] = useState('');
+    const [isLoading, setIsLoading] = useState(false); // ← NEW
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -53,12 +55,16 @@ export default function LoginStepper() {
         setStep(2);
     });
 
-    const onLogin = () => {
+    const onLogin = async () => {
         if (!company || !department) return;
 
-        const input = usernameInput.trim().toLowerCase();
+        setIsLoading(true);
 
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        const input = usernameInput.trim().toLowerCase();
         let foundUser = null;
+
         for (const email in mockUsers) {
             const user = mockUsers[email];
             if (
@@ -85,167 +91,196 @@ export default function LoginStepper() {
                 'User not found. Try:\n• admin@erp.com\n• Admin User\n• sales@erp.com\n• hr@erp.com'
             );
         }
+
+        setIsLoading(false);
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-orange-50 dark:from-gray-900 dark:via-black dark:to-gray-900 px-6 py-12">
-            <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 rounded-3xl shadow-2xl border border-gray-200/40 dark:border-white/10 overflow-hidden bg-white dark:bg-black">
-                <div className="hidden md:block relative">
-                    <img
-                        src="/315.jpg"
-                        alt="ERP Illustration"
-                        className="absolute inset-0 w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                    <div className="absolute inset-0 bg-black clip-path-diagonal opacity-10" />
-                </div>
+        <>
+            <AnimatePresence>
+                {isLoading && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-white/70 dark:bg-black/70 backdrop-blur-md"
+                    >
+                        <div className="flex flex-col items-center gap-4">
+                            <Spinner className="size-12 text-orange-500" />
+                            <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
+                                Signing you in...
+                            </p>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
-                <div className="p-8 md:p-12 flex flex-col justify-center">
-                    <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white">
-                        Enterprise Login
-                    </h2>
-                    <p className="mt-2 text-center text-gray-600 dark:text-gray-300 text-sm">
-                        Secure access to your workspace
-                    </p>
-
-                    <div className="flex justify-center gap-6 mt-6 mb-8">
-                        {[1, 2].map((i) => (
-                            <div key={i} className="flex items-center">
-                                <div
-                                    className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold transition-all ${
-                                        step >= i
-                                            ? 'bg-orange-500 text-white shadow-lg'
-                                            : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-                                    }`}
-                                >
-                                    {i}
-                                </div>
-                                {i === 1 && (
-                                    <div className="w-20 h-px bg-gray-300 dark:bg-gray-700 mx-4" />
-                                )}
-                            </div>
-                        ))}
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-orange-50 dark:from-gray-900 dark:via-black dark:to-gray-900 px-6 py-12">
+                <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 rounded-3xl shadow-2xl border border-gray-200/40 dark:border-white/10 overflow-hidden bg-white dark:bg-black">
+                    <div className="hidden md:block relative">
+                        <img
+                            src="/315.jpg"
+                            alt="ERP Illustration"
+                            className="absolute inset-0 w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                     </div>
 
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={step}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.35 }}
-                            className="space-y-6"
-                        >
-                            {step === 1 ? (
-                                <form onSubmit={onStep1}>
-                                    <div className="space-y-6">
-                                        <div>
-                                            <SignupLabel>Username</SignupLabel>
-                                            <SignupInput
-                                                {...register('username')}
-                                                placeholder="admin@erp.com or Admin User"
-                                                onChange={(e) => setUsernameInput(e.target.value)}
-                                            />
-                                            {errors.username && (
-                                                <p className="text-red-500 text-sm mt-1">
-                                                    {errors.username.message}
-                                                </p>
-                                            )}
-                                        </div>
+                    <div className="p-8 md:p-12 flex flex-col justify-center">
+                        <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white">
+                            Enterprise Login
+                        </h2>
+                        <p className="mt-2 text-center text-gray-600 dark:text-gray-300 text-sm">
+                            Secure access to your workspace
+                        </p>
 
-                                        <div>
-                                            <SignupLabel>Password</SignupLabel>
-                                            <SignupInput
-                                                {...register('password')}
-                                                type="password"
-                                                placeholder="••••••••"
-                                            />
-                                            {errors.password && (
-                                                <p className="text-red-500 text-sm mt-1">
-                                                    {errors.password.message}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </div>
-
-                                    <button
-                                        type="submit"
-                                        disabled={!isValid}
-                                        className="group relative mt-8 block h-12 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50"
+                        <div className="flex justify-center gap-6 mt-6 mb-8">
+                            {[1, 2].map((i) => (
+                                <div key={i} className="flex items-center">
+                                    <div
+                                        className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-semibold transition-all ${
+                                            step >= i
+                                                ? 'bg-orange-500 text-white shadow-lg'
+                                                : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
+                                        }`}
                                     >
-                                        Continue
-                                        <BottomGradient />
-                                    </button>
-                                </form>
-                            ) : (
-                                <>
-                                    <div className="space-y-6">
-                                        <div>
-                                            <SignupLabel>Company</SignupLabel>
-                                            <Select onValueChange={setCompany} value={company}>
-                                                <SelectTrigger className="w-full h-12 shadow-input bg-gray-50 dark:bg-zinc-800">
-                                                    <SelectValue placeholder="Select company" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {Object.keys(COMPANIES).map((c) => (
-                                                        <SelectItem key={c} value={c}>
-                                                            {c}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
-
-                                        <div>
-                                            <SignupLabel>Department</SignupLabel>
-                                            <Select
-                                                onValueChange={setDepartment}
-                                                value={department}
-                                                disabled={!company}
-                                            >
-                                                <SelectTrigger className="w-full h-12 shadow-input bg-gray-50 dark:bg-zinc-800">
-                                                    <SelectValue
-                                                        placeholder={
-                                                            company
-                                                                ? 'Select department'
-                                                                : 'First select company'
-                                                        }
-                                                    />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    {departments.map((d) => (
-                                                        <SelectItem key={d} value={d}>
-                                                            {d}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                        </div>
+                                        {i}
                                     </div>
+                                    {i === 1 && (
+                                        <div className="w-20 h-px bg-gray-300 dark:bg-gray-700 mx-4" />
+                                    )}
+                                </div>
+                            ))}
+                        </div>
 
-                                    <div className="flex gap-4 pt-4">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={step}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.35 }}
+                                className="space-y-6"
+                            >
+                                {step === 1 ? (
+                                    <form onSubmit={onStep1}>
+                                        <div className="space-y-6">
+                                            <div>
+                                                <SignupLabel>Username</SignupLabel>
+                                                <SignupInput
+                                                    {...register('username')}
+                                                    placeholder="admin@erp.com or Admin User"
+                                                    onChange={(e) =>
+                                                        setUsernameInput(e.target.value)
+                                                    }
+                                                />
+                                                {errors.username && (
+                                                    <p className="text-red-500 text-sm mt-1">
+                                                        {errors.username.message}
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <SignupLabel>Password</SignupLabel>
+                                                <SignupInput
+                                                    {...register('password')}
+                                                    type="password"
+                                                    placeholder="••••••••"
+                                                />
+                                                {errors.password && (
+                                                    <p className="text-red-500 text-sm mt-1">
+                                                        {errors.password.message}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+
                                         <button
-                                            onClick={() => setStep(1)}
-                                            className="flex-1 h-12 rounded-xl border border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-white/10 transition"
+                                            type="submit"
+                                            disabled={!isValid}
+                                            className="group relative mt-8 block h-12 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50"
                                         >
-                                            Back
-                                        </button>
-                                        <button
-                                            onClick={onLogin}
-                                            disabled={!company || !department}
-                                            className="group relative flex-1 h-12 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50"
-                                        >
-                                            Sign In
+                                            Continue
                                             <BottomGradient />
                                         </button>
-                                    </div>
-                                </>
-                            )}
-                        </motion.div>
-                    </AnimatePresence>
+                                    </form>
+                                ) : (
+                                    <>
+                                        <div className="space-y-6">
+                                            <div>
+                                                <SignupLabel>Company</SignupLabel>
+                                                <Select onValueChange={setCompany} value={company}>
+                                                    <SelectTrigger className="w-full h-12 shadow-input bg-gray-50 dark:bg-zinc-800">
+                                                        <SelectValue placeholder="Select company" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {Object.keys(COMPANIES).map((c) => (
+                                                            <SelectItem key={c} value={c}>
+                                                                {c}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+
+                                            <div>
+                                                <SignupLabel>Department</SignupLabel>
+                                                <Select
+                                                    onValueChange={setDepartment}
+                                                    value={department}
+                                                    disabled={!company}
+                                                >
+                                                    <SelectTrigger className="w-full h-12 shadow-input bg-gray-50 dark:bg-zinc-800">
+                                                        <SelectValue
+                                                            placeholder={
+                                                                company
+                                                                    ? 'Select department'
+                                                                    : 'First select company'
+                                                            }
+                                                        />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {departments.map((d) => (
+                                                            <SelectItem key={d} value={d}>
+                                                                {d}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
+                                        </div>
+
+                                        <div className="flex gap-4 pt-4">
+                                            <button
+                                                onClick={() => setStep(1)}
+                                                className="flex-1 h-12 rounded-xl border border-gray-300 dark:border-white/20 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-100 dark:hover:bg-white/10 transition"
+                                            >
+                                                Back
+                                            </button>
+                                            <button
+                                                onClick={onLogin}
+                                                disabled={!company || !department || isLoading}
+                                                className="group relative flex-1 h-12 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                                            >
+                                                {isLoading ? (
+                                                    <>
+                                                        <Spinner className="size-5" />
+                                                        Signing In...
+                                                    </>
+                                                ) : (
+                                                    'Sign In'
+                                                )}
+                                                {!isLoading && <BottomGradient />}
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 
