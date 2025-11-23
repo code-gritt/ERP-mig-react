@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDispatch } from 'react-redux';
@@ -47,15 +49,12 @@ export default function LoginStepper() {
 
     const departments = company ? COMPANIES[company] || [] : [];
 
-    const onStep1 = handleSubmit(() => {
-        setStep(2);
-    });
+    const onStep1 = handleSubmit(() => setStep(2));
 
     const onLogin = () => {
         if (!company || !department) return;
-        dispatch(
-            loginSuccess(document.querySelector('input[placeholder="john.doe"]')?.value || 'user')
-        );
+        const username = document.querySelector('input[placeholder="john.doe"]')?.value || 'user';
+        dispatch(loginSuccess(username));
         navigate('/dashboard');
     };
 
@@ -133,7 +132,7 @@ export default function LoginStepper() {
                                     disabled={!isValid}
                                     className="group relative mt-8 block h-12 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50"
                                 >
-                                    Continue
+                                    Continue →
                                     <BottomGradient />
                                 </button>
                             </form>
@@ -143,7 +142,7 @@ export default function LoginStepper() {
                                     <div>
                                         <SignupLabel>Company</SignupLabel>
                                         <Select onValueChange={setCompany} value={company}>
-                                            <SelectTrigger className="h-12 shadow-input bg-gray-50 dark:bg-zinc-800">
+                                            <SelectTrigger className="w-full h-12 shadow-input bg-gray-50 dark:bg-zinc-800">
                                                 <SelectValue placeholder="Select company" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -163,7 +162,7 @@ export default function LoginStepper() {
                                             value={department}
                                             disabled={!company}
                                         >
-                                            <SelectTrigger className="h-12 shadow-input bg-gray-50 dark:bg-zinc-800">
+                                            <SelectTrigger className="w-full h-12 shadow-input bg-gray-50 dark:bg-zinc-800">
                                                 <SelectValue
                                                     placeholder={
                                                         company
