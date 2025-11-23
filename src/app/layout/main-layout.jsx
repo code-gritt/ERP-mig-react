@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '@/features/auth/authSlice';
@@ -15,13 +15,36 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
-import { LogOut, Menu, Building2 } from 'lucide-react';
+import { LogOut, Menu, Building2, Moon, Sun } from 'lucide-react';
 
 export default function MainLayout() {
     const { user, company, department } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
+
+    const [isDark, setIsDark] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return (
+                localStorage.getItem('theme') === 'dark' ||
+                (!localStorage.getItem('theme') &&
+                    window.matchMedia('(prefers-color-scheme: dark)').matches)
+            );
+        }
+        return false;
+    });
+
+    useEffect(() => {
+        if (isDark) {
+            document.documentElement.classList.add('dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            localStorage.setItem('theme', 'light');
+        }
+    }, [isDark]);
+
+    const toggleTheme = () => setIsDark((prev) => !prev);
 
     const handleLogout = () => {
         dispatch(logout());
@@ -74,6 +97,21 @@ export default function MainLayout() {
                                 </SheetTitle>
                             </SheetHeader>
                             <div className="mt-8 space-y-4">
+                                <div className="flex items-center justify-between p-4 rounded-xl bg-muted/50">
+                                    <span className="text-sm font-medium">Dark Mode</span>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={toggleTheme}
+                                        className="h-9 w-9"
+                                    >
+                                        {isDark ? (
+                                            <Sun className="h-5 w-5" />
+                                        ) : (
+                                            <Moon className="h-5 w-5" />
+                                        )}
+                                    </Button>
+                                </div>
                                 <div className="flex items-center gap-4 p-4 rounded-xl bg-muted/50">
                                     <Avatar className="h-14 w-14">
                                         <AvatarImage src={user?.avatar} />
@@ -101,7 +139,19 @@ export default function MainLayout() {
                         </SheetContent>
                     </Sheet>
 
-                    <div className="hidden lg:block">
+                    <div className="hidden lg:flex items-center gap-3">
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={toggleTheme}
+                            className="h-11 w-11 rounded-full hover:bg-accent/80 transition-all duration-300 hover:scale-110"
+                            aria-label="Toggle dark mode"
+                        >
+                            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                            <span className="sr-only">Toggle theme</span>
+                        </Button>
+
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button
