@@ -1,14 +1,14 @@
-// src/pages/Dashboard.jsx
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-// FocusCards — 5 columns on lg+
 export const Card = React.memo(({ card, index, hovered, setHovered }) => (
     <div
         onMouseEnter={() => setHovered(index)}
         onMouseLeave={() => setHovered(null)}
-        className={`rounded-3xl relative bg-gray-100 dark:bg-neutral-900 overflow-hidden h-96 w-full transition-all duration-300 ease-out ${
+        className={`rounded-3xl relative bg-gray-100 dark:bg-neutral-900 
+        overflow-hidden h-96 w-full min-w-[260px]
+        transition-all duration-300 ease-out ${
             hovered !== null && hovered !== index ? 'blur-sm scale-[0.98]' : ''
         }`}
     >
@@ -36,7 +36,7 @@ export function FocusCards({ cards }) {
     const [hovered, setHovered] = React.useState(null);
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 max-w-7xl mx-auto w-full px-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto w-full px-4">
             {cards.map((card, index) => (
                 <Card
                     key={card.title}
@@ -50,7 +50,6 @@ export function FocusCards({ cards }) {
     );
 }
 
-// All ERP Modules
 const erpModuleCards = [
     {
         title: 'Sales',
@@ -117,7 +116,6 @@ export default function Dashboard() {
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8 space-y-12">
-            {/* Greeting */}
             <div className="text-center">
                 <h1 className="text-5xl font-bold bg-gradient-to-r from-orange-600 to-amber-500 bg-clip-text text-transparent">
                     Welcome back, {user?.name.split(' ')[0]}!
@@ -129,9 +127,7 @@ export default function Dashboard() {
                 </p>
             </div>
 
-            {/* Single Row: Stats + Session Details */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-                {/* Company */}
                 <div className="p-5 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/20 rounded-2xl border border-orange-200 dark:border-orange-800">
                     <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
                         Company
@@ -139,7 +135,6 @@ export default function Dashboard() {
                     <p className="text-xl font-bold mt-1">{company || '—'}</p>
                 </div>
 
-                {/* Department */}
                 <div className="p-5 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/20 rounded-2xl border border-blue-200 dark:border-blue-800">
                     <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
                         Department
@@ -147,7 +142,6 @@ export default function Dashboard() {
                     <p className="text-xl font-bold mt-1">{department || '—'}</p>
                 </div>
 
-                {/* Role */}
                 <div className="p-5 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/20 rounded-2xl border border-purple-200 dark:border-purple-800">
                     <p className="text-sm font-medium text-purple-600 dark:text-purple-400">Role</p>
                     <p className="text-xl font-bold mt-1 capitalize">
@@ -155,13 +149,11 @@ export default function Dashboard() {
                     </p>
                 </div>
 
-                {/* Status */}
                 <div className="p-5 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/20 rounded-2xl border border-green-200 dark:border-green-800">
                     <p className="text-sm font-medium text-green-600 dark:text-green-400">Status</p>
                     <p className="text-xl font-bold mt-1">Active Session</p>
                 </div>
 
-                {/* Session Details — merged into the row */}
                 <div className="p-5 bg-white dark:bg-zinc-900 rounded-2xl border shadow-sm">
                     <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
                         Session Details
@@ -173,12 +165,10 @@ export default function Dashboard() {
                 </div>
             </div>
 
-            {/* Your Modules Title */}
             <h2 className="text-4xl font-bold text-center text-gray-900 dark:text-white">
                 Your Modules
             </h2>
 
-            {/* FocusCards — 5 per row, fits perfectly */}
             {allowedModules.length > 0 ? (
                 <FocusCards cards={allowedModules} />
             ) : (
