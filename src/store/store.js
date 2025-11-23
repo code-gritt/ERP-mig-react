@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from '../features/auth/authSlice';
+import authReducer, { restoreSession } from '@/features/auth/authSlice';
 
 export const store = configureStore({
     reducer: {
@@ -10,3 +10,5 @@ export const store = configureStore({
             serializableCheck: false,
         }),
 });
+
+store.dispatch(restoreSession());

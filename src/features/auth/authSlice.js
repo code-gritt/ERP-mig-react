@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const mockUsers = {
+export const mockUsers = {
     'admin@erp.com': {
         id: 1,
         name: 'Admin User',
@@ -27,11 +27,36 @@ const mockUsers = {
     },
 };
 
-const initialState = {
-    user: null,
-    isAuthenticated: false,
-    token: null,
+const loadState = () => {
+    try {
+        const saved = localStorage.getItem('authState');
+        return saved ? JSON.parse(saved) : { user: null, isAuthenticated: false, token: null };
+    } catch {
+        return { user: null, isAuthenticated: false, token: null };
+    }
 };
+
+const saveState = (state) => {
+    try {
+        localStorage.setItem('authState', JSON.stringify(state));
+    } catch (err) {
+        console.error('Could not save auth state', err);
+    }
+};
+
+const logLogin = (user) => {
+    const logs = JSON.parse(localStorage.getItem('loginLogs') || '[]');
+    logs.push({
+        user: user.name,
+        email: user.email,
+        role: user.role,
+        timestamp: new Date().toISOString(),
+        ip: 'localhost',
+    });
+    localStorage.setItem('loginLogs', JSON.stringify(logs.slice(-50)));
+};
+
+const initialState = loadState();
 
 const authSlice = createSlice({
     name: 'auth',
@@ -39,17 +64,30 @@ const authSlice = createSlice({
     reducers: {
         loginSuccess(state, action) {
             const email = action.payload;
-            state.user = mockUsers[email] || null;
+            const user = mockUsers[email];
+
+            if (!user) {
+                return state;
+            }
+
+            state.user = user;
             state.isAuthenticated = true;
-            state.token = 'mock-jwt-token-123';
+            state.token = 'mock-jwt-' + Date.now();
+
+            saveState(state);
+            logLogin(user);
         },
         logout(state) {
             state.user = null;
             state.isAuthenticated = false;
             state.token = null;
+            saveState(state);
+        },
+        restoreSession(state) {
+            return loadState();
         },
     },
 });
 
-export const { loginSuccess, logout } = authSlice.actions;
+export const { loginSuccess, logout, restoreSession } = authSlice.actions;
 export default authSlice.reducer;

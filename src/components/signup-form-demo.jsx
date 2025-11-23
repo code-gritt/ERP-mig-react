@@ -30,10 +30,14 @@ const COMPANIES = {
     Oscorp: ['Bio', 'Chemicals', 'Genetics'],
 };
 
+// Import mockUsers directly from slice
+import { mockUsers } from '@/features/auth/authSlice';
+
 export default function LoginStepper() {
     const [step, setStep] = useState(1);
     const [company, setCompany] = useState('');
     const [department, setDepartment] = useState('');
+    const [usernameInput, setUsernameInput] = useState(''); // Track input value
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -49,13 +53,37 @@ export default function LoginStepper() {
 
     const departments = company ? COMPANIES[company] || [] : [];
 
-    const onStep1 = handleSubmit(() => setStep(2));
+    const onStep1 = handleSubmit((data) => {
+        setUsernameInput(data.username);
+        setStep(2);
+    });
 
     const onLogin = () => {
         if (!company || !department) return;
-        const username = document.querySelector('input[placeholder="john.doe"]')?.value || 'user';
-        dispatch(loginSuccess(username));
-        navigate('/dashboard');
+
+        const input = usernameInput.trim().toLowerCase();
+
+        let foundUser = null;
+        for (const email in mockUsers) {
+            const user = mockUsers[email];
+            if (
+                user.email.toLowerCase() === input ||
+                user.name.toLowerCase() === input ||
+                user.email.split('@')[0].toLowerCase() === input
+            ) {
+                foundUser = user;
+                break;
+            }
+        }
+
+        if (foundUser) {
+            dispatch(loginSuccess(foundUser.email));
+            navigate('/dashboard');
+        } else {
+            alert(
+                'User not found. Try:\n• admin@erp.com\n• Admin User\n• sales@erp.com\n• hr@erp.com'
+            );
+        }
     };
 
     return (
@@ -103,7 +131,8 @@ export default function LoginStepper() {
                                         <SignupLabel>Username</SignupLabel>
                                         <SignupInput
                                             {...register('username')}
-                                            placeholder="john.doe"
+                                            placeholder="admin@erp.com or Admin User"
+                                            onChange={(e) => setUsernameInput(e.target.value)}
                                         />
                                         {errors.username && (
                                             <p className="text-red-500 text-sm mt-1">
@@ -132,7 +161,7 @@ export default function LoginStepper() {
                                     disabled={!isValid}
                                     className="group relative mt-8 block h-12 w-full rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold shadow-lg hover:scale-[1.02] transition-all disabled:opacity-50"
                                 >
-                                    Continue →
+                                    Continue
                                     <BottomGradient />
                                 </button>
                             </form>
