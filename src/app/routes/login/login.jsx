@@ -1,7 +1,10 @@
+import LoginStepper from '@/components/signup-form-demo';
 import React from 'react';
 
-const Login = () => {
-    return <div className="text-center text-2xl font-medium">Login</div>;
-};
-
-export default Login;
+export default function Login() {
+    return (
+        <div className="min-h-screen flex items-center justify-center px-4">
+            <LoginStepper />
+        </div>
+    );
+}
