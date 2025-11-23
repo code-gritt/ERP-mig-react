@@ -130,7 +130,7 @@ export default function Dashboard() {
             </div>
 
             {/* Single Row: Stats + Session Details */}
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                 {/* Company */}
                 <div className="p-5 bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/20 rounded-2xl border border-orange-200 dark:border-orange-800">
                     <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
@@ -162,7 +162,7 @@ export default function Dashboard() {
                 </div>
 
                 {/* Session Details — merged into the row */}
-                <div className="lg:col-span-2 p-5 bg-white dark:bg-zinc-900 rounded-2xl border shadow-sm">
+                <div className="p-5 bg-white dark:bg-zinc-900 rounded-2xl border shadow-sm">
                     <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
                         Session Details
                     </p>
